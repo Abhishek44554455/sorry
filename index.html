@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Sorry Kritika 💖</title>
+
+    <style>
+      body {
+        margin: 0;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(135deg, #ff758c, #ff7eb3);
+        font-family: "Segoe UI", sans-serif;
+        overflow: hidden;
+      }
+
+      /* Center Text */
+      .container {
+        text-align: center;
+        color: white;
+      }
+
+      /* Typing Text */
+      #text {
+        font-size: 40px;
+        font-weight: bold;
+        border-right: 3px solid white;
+        white-space: nowrap;
+        overflow: hidden;
+      }
+
+      /* Heart Beat */
+      .heart {
+        font-size: 60px;
+        animation: beat 1s infinite;
+        margin-top: 20px;
+      }
+
+      @keyframes beat {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.2);
+        }
+      }
+
+      /* Floating hearts */
+      .float-heart {
+        position: absolute;
+        bottom: 0;
+        font-size: 20px;
+        animation: rise 5s linear infinite;
+      }
+
+      @keyframes rise {
+        0% {
+          transform: translateY(0);
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(-100vh);
+          opacity: 0;
+        }
+      }
+
+      /* Spark */
+      .spark {
+        position: absolute;
+        width: 5px;
+        height: 5px;
+        background: white;
+        border-radius: 50%;
+        animation: explode 1s ease-out forwards;
+      }
+
+      @keyframes explode {
+        to {
+          transform: translate(var(--x), var(--y));
+          opacity: 0;
+        }
+      }
+
+      /* Button */
+      button {
+        margin-top: 20px;
+        padding: 8px 15px;
+        border: none;
+        border-radius: 20px;
+        cursor: pointer;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <div id="text"></div>
+      <div class="heart">💖</div>
+      <button onclick="toggleSound()">🔊 Sound</button>
+    </div>
+
+    <audio id="music" loop>
+      <source
+        src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"
+      />
+    </audio>
+
+    <script>
+      const message = "Sorry Kritika 💔";
+      let i = 0;
+      const text = document.getElementById("text");
+
+      /* Typing effect */
+      function type() {
+        if (i < message.length) {
+          text.innerHTML += message.charAt(i);
+          i++;
+          setTimeout(type, 100);
+        } else {
+          createSpark();
+        }
+      }
+      type();
+
+      /* Floating hearts */
+      setInterval(() => {
+        let h = document.createElement("div");
+        h.className = "float-heart";
+        h.innerHTML = "💖";
+        h.style.left = Math.random() * 100 + "vw";
+        document.body.appendChild(h);
+        setTimeout(() => h.remove(), 5000);
+      }, 300);
+
+      /* Spark burst */
+      function createSpark() {
+        for (let i = 0; i < 30; i++) {
+          let s = document.createElement("div");
+          s.className = "spark";
+          s.style.left = "50%";
+          s.style.top = "50%";
+          s.style.setProperty("--x", Math.random() * 200 - 100 + "px");
+          s.style.setProperty("--y", Math.random() * 200 - 100 + "px");
+          document.body.appendChild(s);
+          setTimeout(() => s.remove(), 1000);
+        }
+      }
+
+      /* Sound */
+      let playing = false;
+      function toggleSound() {
+        let music = document.getElementById("music");
+        if (playing) {
+          music.pause();
+        } else {
+          music.play();
+        }
+        playing = !playing;
+      }
+    </script>
+  </body>
+</html>
