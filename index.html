@@ -2,50 +2,115 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sorry Kritika 💖</title>
 
     <style>
       body {
         margin: 0;
-        height: 100vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background: linear-gradient(135deg, #ff758c, #ff7eb3);
         font-family: "Segoe UI", sans-serif;
         overflow: hidden;
-      }
-
-      /* Center Text */
-      .container {
-        text-align: center;
+        background: black;
         color: white;
       }
 
-      /* Typing Text */
+      /* Intro */
+      .intro {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle, #000, #1a1a1a);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        z-index: 10;
+        animation: fadeOut 2s ease forwards;
+        animation-delay: 3s;
+      }
+
+      .intro h1 {
+        font-size: 8vw;
+        opacity: 0;
+        animation: zoomIn 2s forwards;
+      }
+
+      .intro p {
+        opacity: 0;
+        animation: fadeIn 2s forwards;
+        animation-delay: 1.5s;
+      }
+
+      @keyframes zoomIn {
+        from {
+          transform: scale(0.6);
+          opacity: 0;
+        }
+        to {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+
+      @keyframes fadeIn {
+        to {
+          opacity: 1;
+        }
+      }
+      @keyframes fadeOut {
+        to {
+          opacity: 0;
+          visibility: hidden;
+        }
+      }
+
+      /* Main */
+      .main {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+      }
+
       #text {
-        font-size: 40px;
-        font-weight: bold;
+        font-size: 8vw;
         border-right: 3px solid white;
         white-space: nowrap;
         overflow: hidden;
       }
 
-      /* Heart Beat */
+      .sub {
+        margin-top: 10px;
+        font-size: 4vw;
+        color: #ffb6c1;
+      }
+
       .heart {
-        font-size: 60px;
+        font-size: 12vw;
         animation: beat 1s infinite;
-        margin-top: 20px;
       }
 
       @keyframes beat {
-        0%,
-        100% {
-          transform: scale(1);
-        }
         50% {
           transform: scale(1.2);
         }
+      }
+
+      /* Controls */
+      .controls {
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        display: flex;
+        gap: 8px;
+      }
+
+      button {
+        padding: 8px 12px;
+        border-radius: 20px;
+        border: none;
+        cursor: pointer;
       }
 
       /* Floating hearts */
@@ -57,76 +122,80 @@
       }
 
       @keyframes rise {
-        0% {
-          transform: translateY(0);
-          opacity: 1;
-        }
-        100% {
+        to {
           transform: translateY(-100vh);
           opacity: 0;
         }
       }
 
-      /* Spark */
-      .spark {
+      .tap {
         position: absolute;
-        width: 5px;
-        height: 5px;
-        background: white;
-        border-radius: 50%;
-        animation: explode 1s ease-out forwards;
-      }
-
-      @keyframes explode {
-        to {
-          transform: translate(var(--x), var(--y));
-          opacity: 0;
-        }
-      }
-
-      /* Button */
-      button {
-        margin-top: 20px;
-        padding: 8px 15px;
-        border: none;
-        border-radius: 20px;
-        cursor: pointer;
-        font-weight: bold;
+        bottom: 30px;
+        width: 100%;
+        text-align: center;
+        font-size: 4vw;
+        opacity: 0.7;
       }
     </style>
   </head>
 
   <body>
-    <div class="container">
-      <div id="text"></div>
-      <div class="heart">💖</div>
-      <button onclick="toggleSound()">🔊 Sound</button>
+    <div class="intro">
+      <h1>For Kritika 💖</h1>
+      <p>Something I should’ve said earlier...</p>
     </div>
 
-    <audio id="music" loop>
-      <source
-        src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"
-      />
-    </audio>
+    <div class="controls">
+      <button onclick="toggleSound()">🔊</button>
+      <button onclick="changeTrack()">🎵</button>
+    </div>
+
+    <div class="main">
+      <div id="text"></div>
+      <div class="sub">I’m late… but I truly mean it 💫</div>
+      <div class="heart">💖</div>
+    </div>
+
+    <div class="tap">Tap anywhere to start</div>
+
+    <audio id="music" loop></audio>
 
     <script>
-      const message = "Sorry Kritika 💔";
+      let started = false;
       let i = 0;
-      const text = document.getElementById("text");
+      const message = "Sorry Kritika 💔";
 
-      /* Typing effect */
-      function type() {
+      /* Royalty-free tracks */
+      const tracks = [
+        "https://cdn.pixabay.com/audio/2022/03/15/audio_115b9b6c77.mp3",
+        "https://cdn.pixabay.com/audio/2022/10/25/audio_946f54c8b1.mp3",
+        "https://cdn.pixabay.com/audio/2022/02/23/audio_c8c8a73467.mp3",
+      ];
+
+      let currentTrack = 0;
+      const music = document.getElementById("music");
+      music.src = tracks[currentTrack];
+
+      /* Start on tap */
+      document.body.addEventListener("click", () => {
+        if (!started) {
+          music.play();
+          typeText();
+          started = true;
+        }
+      });
+
+      /* Typing */
+      function typeText() {
+        const el = document.getElementById("text");
         if (i < message.length) {
-          text.innerHTML += message.charAt(i);
+          el.innerHTML += message.charAt(i);
           i++;
-          setTimeout(type, 100);
-        } else {
-          createSpark();
+          setTimeout(typeText, 120);
         }
       }
-      type();
 
-      /* Floating hearts */
+      /* Hearts */
       setInterval(() => {
         let h = document.createElement("div");
         h.className = "float-heart";
@@ -134,32 +203,21 @@
         h.style.left = Math.random() * 100 + "vw";
         document.body.appendChild(h);
         setTimeout(() => h.remove(), 5000);
-      }, 300);
+      }, 400);
 
-      /* Spark burst */
-      function createSpark() {
-        for (let i = 0; i < 30; i++) {
-          let s = document.createElement("div");
-          s.className = "spark";
-          s.style.left = "50%";
-          s.style.top = "50%";
-          s.style.setProperty("--x", Math.random() * 200 - 100 + "px");
-          s.style.setProperty("--y", Math.random() * 200 - 100 + "px");
-          document.body.appendChild(s);
-          setTimeout(() => s.remove(), 1000);
-        }
+      /* Sound toggle */
+      let playing = true;
+      function toggleSound() {
+        if (playing) music.pause();
+        else music.play();
+        playing = !playing;
       }
 
-      /* Sound */
-      let playing = false;
-      function toggleSound() {
-        let music = document.getElementById("music");
-        if (playing) {
-          music.pause();
-        } else {
-          music.play();
-        }
-        playing = !playing;
+      /* Change track */
+      function changeTrack() {
+        currentTrack = (currentTrack + 1) % tracks.length;
+        music.src = tracks[currentTrack];
+        music.play();
       }
     </script>
   </body>
