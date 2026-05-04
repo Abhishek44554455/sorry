@@ -3,260 +3,838 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Birthday Experience 🎉</title>
-
+    <title>Happy Birthday ✨</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
     <style>
-      * {
+      *,
+      *::before,
+      *::after {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
-        font-family: "Segoe UI", sans-serif;
       }
 
+      :root {
+        --gold: #f5c842;
+        --gold2: #e8a020;
+        --rose: #ff6b9d;
+        --violet: #a855f7;
+        --cream: #fdf6e3;
+        --deep: #0c0b1a;
+      }
+
+      html,
       body {
+        width: 100%;
+        height: 100%;
         overflow: hidden;
-        background: #0f172a;
+        background: var(--deep);
+        font-family: "DM Sans", sans-serif;
+        cursor: none;
       }
 
-      /* SLIDER */
-      .slider {
-        display: flex;
-        width: 500vw;
-        height: 100vh;
-        transition: transform 0.8s cubic-bezier(0.77, 0, 0.18, 1);
+      /* CUSTOM CURSOR */
+      #cursor {
+        position: fixed;
+        width: 12px;
+        height: 12px;
+        background: var(--gold);
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 9999;
+        transform: translate(-50%, -50%);
+        transition:
+          transform 0.1s,
+          width 0.2s,
+          height 0.2s,
+          opacity 0.2s;
+        mix-blend-mode: screen;
+      }
+      #cursor-trail {
+        position: fixed;
+        width: 32px;
+        height: 32px;
+        border: 1px solid rgba(245, 200, 66, 0.3);
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 9998;
+        transform: translate(-50%, -50%);
+        transition:
+          left 0.12s ease,
+          top 0.12s ease;
       }
 
-      /* SLIDE */
-      .slide {
-        width: 100vw;
-        height: 100vh;
+      /* STARFIELD */
+      #stars {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      /* SLIDES */
+      .world {
+        position: fixed;
+        inset: 0;
+        z-index: 1;
+      }
+
+      .scene {
+        position: absolute;
+        inset: 0;
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .scene.active {
+        opacity: 1;
+        pointer-events: all;
+      }
+
+      /* TYPOGRAPHY */
+      .eyebrow {
+        font-family: "DM Sans", sans-serif;
+        font-weight: 300;
+        font-size: 0.7rem;
+        letter-spacing: 0.35em;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-bottom: 18px;
+        opacity: 0.8;
+      }
+
+      .headline {
+        font-family: "Playfair Display", serif;
+        font-size: clamp(3rem, 8vw, 6rem);
+        font-weight: 700;
+        color: #fff;
+        line-height: 1.05;
         text-align: center;
-        padding: 20px;
-        color: white;
+      }
+      .headline em {
+        font-style: italic;
+        background: linear-gradient(135deg, var(--gold), var(--rose));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
       }
 
-      /* GRADIENTS */
-      .slide:nth-child(1) {
-        background: linear-gradient(135deg, #4f46e5, #9333ea);
-      }
-      .slide:nth-child(2) {
-        background: linear-gradient(135deg, #ef4444, #fb7185);
-      }
-      .slide:nth-child(3) {
-        background: linear-gradient(135deg, #10b981, #34d399);
-      }
-      .slide:nth-child(4) {
-        background: linear-gradient(135deg, #9333ea, #6366f1);
-      }
-      .slide:nth-child(5) {
-        background: linear-gradient(135deg, #f59e0b, #fbbf24);
-      }
-
-      /* TEXT */
-      h1 {
-        font-size: 2.5rem;
-        margin-bottom: 15px;
-      }
-
-      p {
-        max-width: 500px;
-        line-height: 1.6;
-        opacity: 0.9;
-      }
-
-      /* BUTTON */
-      button {
-        margin-top: 25px;
-        padding: 12px 25px;
-        border: none;
-        border-radius: 30px;
-        background: rgba(255, 255, 255, 0.15);
-        backdrop-filter: blur(10px);
-        color: white;
+      .subtext {
         font-size: 1rem;
-        cursor: pointer;
-        transition: 0.3s;
+        font-weight: 300;
+        color: rgba(255, 255, 255, 0.55);
+        margin-top: 20px;
+        text-align: center;
+        max-width: 380px;
+        line-height: 1.7;
+        letter-spacing: 0.01em;
       }
 
-      button:hover {
-        transform: scale(1.1);
-        background: white;
-        color: #111;
-      }
-
-      /* DOT NAVIGATION */
-      .dots {
-        position: fixed;
-        bottom: 20px;
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        gap: 10px;
-      }
-
-      .dot {
-        width: 10px;
-        height: 10px;
-        background: rgba(255, 255, 255, 0.4);
-        border-radius: 50%;
-        transition: 0.3s;
-      }
-
-      .dot.active {
-        background: white;
-        transform: scale(1.5);
-      }
-
-      /* 🎂 CAKE */
-      .cake {
+      /* CTA BUTTON */
+      .btn {
+        margin-top: 42px;
+        padding: 14px 38px;
+        background: transparent;
+        border: 1px solid rgba(245, 200, 66, 0.4);
+        border-radius: 60px;
+        color: var(--gold);
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.85rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        cursor: none;
+        transition: all 0.3s;
         position: relative;
-        margin-top: 30px;
+        overflow: hidden;
+      }
+      .btn::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: var(--gold);
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: -1;
+        border-radius: 60px;
+      }
+      .btn:hover {
+        color: var(--deep);
+        border-color: var(--gold);
+      }
+      .btn:hover::before {
+        transform: scaleX(1);
       }
 
-      .layer {
-        width: 150px;
-        height: 70px;
-        background: #ff6b81;
-        border-radius: 15px;
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+      /* PROGRESS DOTS */
+      #dots {
+        position: fixed;
+        bottom: 36px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 8px;
+        z-index: 100;
+      }
+      .dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.2);
+        transition: all 0.4s;
+      }
+      .dot.on {
+        background: var(--gold);
+        width: 22px;
+        border-radius: 3px;
       }
 
-      .icing {
-        width: 150px;
-        height: 20px;
-        background: white;
+      /* SCENE 1 – OPENING */
+      #s1 {
+        background: radial-gradient(
+          ellipse at 60% 40%,
+          #1a0a2e 0%,
+          #0c0b1a 70%
+        );
+      }
+
+      .big-num {
+        font-family: "Playfair Display", serif;
+        font-size: clamp(8rem, 22vw, 18rem);
+        font-weight: 700;
+        line-height: 1;
+        background: linear-gradient(
+          180deg,
+          rgba(245, 200, 66, 0.9) 0%,
+          rgba(232, 160, 32, 0.3) 100%
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -52%);
+        z-index: 0;
+        user-select: none;
+        pointer-events: none;
+      }
+
+      .s1-content {
+        position: relative;
+        z-index: 1;
+        text-align: center;
+      }
+
+      /* SCENE 2 – SORRY */
+      #s2 {
+        background: radial-gradient(
+          ellipse at 40% 60%,
+          #1a0515 0%,
+          #0c0b1a 70%
+        );
+      }
+
+      .orbit-ring {
+        position: absolute;
+        width: 320px;
+        height: 320px;
+        border: 1px solid rgba(255, 107, 157, 0.15);
+        border-radius: 50%;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        animation: spin 12s linear infinite;
+      }
+      .orbit-ring::after {
+        content: "✦";
+        position: absolute;
+        top: -8px;
+        left: 50%;
+        transform: translateX(-50%);
+        color: var(--rose);
+        font-size: 14px;
+      }
+      .orbit-ring2 {
+        width: 420px;
+        height: 420px;
+        border-color: rgba(168, 85, 247, 0.1);
+        animation-duration: 18s;
+        animation-direction: reverse;
+      }
+      .orbit-ring2::after {
+        color: var(--violet);
+        top: auto;
+        bottom: -8px;
+      }
+
+      @keyframes spin {
+        to {
+          transform: translate(-50%, -50%) rotate(360deg);
+        }
+      }
+
+      /* SCENE 3 – WISH */
+      #s3 {
+        background: radial-gradient(
+          ellipse at 50% 30%,
+          #0a1a10 0%,
+          #0c0b1a 65%
+        );
+      }
+
+      .floating-words {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        overflow: hidden;
+      }
+      .fw {
+        position: absolute;
+        font-family: "Playfair Display", serif;
+        font-style: italic;
+        color: rgba(255, 255, 255, 0.06);
+        font-size: clamp(1rem, 3vw, 2rem);
+        white-space: nowrap;
+        animation: floatUp linear infinite;
+      }
+
+      @keyframes floatUp {
+        from {
+          transform: translateY(110vh) rotate(-5deg);
+          opacity: 0;
+        }
+        10% {
+          opacity: 1;
+        }
+        90% {
+          opacity: 1;
+        }
+        to {
+          transform: translateY(-10vh) rotate(5deg);
+          opacity: 0;
+        }
+      }
+
+      /* SCENE 4 – CAKE */
+      #s4 {
+        background: radial-gradient(
+          ellipse at 50% 70%,
+          #1a0a0a 0%,
+          #0c0b1a 65%
+        );
+      }
+
+      .cake-wrap {
+        position: relative;
+        margin-bottom: 30px;
+      }
+
+      /* Plate */
+      .plate {
+        width: 230px;
+        height: 16px;
+        background: linear-gradient(180deg, #e8d5b0, #c8b080);
+        border-radius: 50%;
+        margin: 0 auto;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+      }
+
+      /* Cake body */
+      .cake-body {
+        width: 180px;
+        margin: -4px auto 0;
+        position: relative;
+      }
+
+      .tier {
+        border-radius: 10px;
+        position: relative;
+        overflow: visible;
+      }
+
+      .t1 {
+        width: 180px;
+        height: 64px;
+        background: linear-gradient(135deg, #f78fb3, #e8607e);
+        box-shadow:
+          0 -4px 0 #ff9db5 inset,
+          0 12px 24px rgba(200, 50, 100, 0.4);
+        border-radius: 12px 12px 4px 4px;
+      }
+
+      .t2 {
+        width: 140px;
+        height: 52px;
+        background: linear-gradient(135deg, #fda085, #f5628c);
+        margin: 0 auto;
+        box-shadow:
+          0 -4px 0 #ffb09a inset,
+          0 8px 20px rgba(200, 80, 80, 0.4);
+        border-radius: 12px 12px 4px 4px;
+      }
+
+      .t3 {
+        width: 100px;
+        height: 44px;
+        background: linear-gradient(135deg, #ffecd2, #fcb69f);
+        margin: 0 auto;
+        box-shadow:
+          0 -4px 0 #fff0e0 inset,
+          0 6px 16px rgba(200, 120, 80, 0.4);
+        border-radius: 12px 12px 4px 4px;
+      }
+
+      /* Icing drips */
+      .drip-layer {
         position: absolute;
         top: -10px;
-        border-radius: 10px;
+        left: 0;
+        right: 0;
+        height: 18px;
+        overflow: visible;
+        pointer-events: none;
+      }
+      .drip-layer svg {
+        width: 100%;
+        height: 28px;
+        overflow: visible;
       }
 
-      /* CANDLE */
-      .candle {
-        width: 14px;
-        height: 40px;
+      /* Candles */
+      .candles {
         position: absolute;
-        top: -50px;
-        left: 68px;
-        border-radius: 4px;
-        background: linear-gradient(#fff, #eee);
+        top: -68px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 14px;
+      }
+
+      .candle {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: relative;
+      }
+
+      .c-body {
+        width: 10px;
+        height: 42px;
+        border-radius: 3px;
+        position: relative;
+      }
+      .c-body::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 25%;
+        right: 25%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 2px;
+      }
+
+      .c1 .c-body {
+        background: linear-gradient(180deg, #ff6b9d, #c73b6f);
+      }
+      .c2 .c-body {
+        background: linear-gradient(180deg, #f5c842, #d4920a);
+      }
+      .c3 .c-body {
+        background: linear-gradient(180deg, #a855f7, #7c3aed);
+      }
+
+      .c-wick {
+        width: 2px;
+        height: 8px;
+        background: #444;
+        margin-bottom: -1px;
+        border-radius: 1px;
+      }
+
+      .flame-wrap {
+        position: absolute;
+        top: -32px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
       }
 
       .flame {
-        width: 14px;
-        height: 20px;
-        position: absolute;
-        top: -20px;
-        background: radial-gradient(circle, #fff, #ffcc00, orange);
-        border-radius: 50%;
-        animation: flicker 0.3s infinite;
-        box-shadow: 0 0 20px orange;
+        width: 12px;
+        height: 22px;
+        background: radial-gradient(
+          ellipse at 50% 80%,
+          #fff 0%,
+          #ffed00 30%,
+          #ff8c00 60%,
+          transparent 100%
+        );
+        border-radius: 50% 50% 30% 30%;
+        animation: flicker 0.4s ease-in-out infinite alternate;
+        filter: blur(0.5px);
+        transform-origin: bottom center;
       }
-
+      .glow {
+        position: absolute;
+        width: 28px;
+        height: 28px;
+        background: radial-gradient(
+          circle,
+          rgba(255, 180, 0, 0.6),
+          transparent 70%
+        );
+        top: -4px;
+        left: 50%;
+        transform: translateX(-50%);
+        border-radius: 50%;
+        animation: glowPulse 0.4s ease-in-out infinite alternate;
+      }
       @keyframes flicker {
-        0% {
-          transform: scale(1);
-        }
-        100% {
-          transform: scale(1.2);
-        }
-      }
-
-      /* SMOKE */
-      .smoke span {
-        position: absolute;
-        width: 8px;
-        height: 8px;
-        background: gray;
-        border-radius: 50%;
-        opacity: 0;
-      }
-
-      @keyframes smoke {
-        0% {
-          opacity: 1;
-          transform: translateY(0);
-        }
-        100% {
-          opacity: 0;
-          transform: translateY(-40px) scale(2);
-        }
-      }
-
-      /* FINAL TEXT */
-      .final {
-        animation: fadeUp 1.2s ease;
-      }
-
-      @keyframes fadeUp {
         from {
-          opacity: 0;
-          transform: translateY(30px);
+          transform: scaleX(1) scaleY(1) rotate(-2deg);
+        }
+        to {
+          transform: scaleX(0.85) scaleY(1.1) rotate(2deg);
+        }
+      }
+      @keyframes glowPulse {
+        from {
+          opacity: 0.6;
+          transform: translateX(-50%) scale(1);
         }
         to {
           opacity: 1;
-          transform: translateY(0);
+          transform: translateX(-50%) scale(1.2);
         }
+      }
+
+      .flame.out {
+        display: none;
+      }
+
+      /* Smoke after blow */
+      .smoke-particle {
+        position: absolute;
+        width: 6px;
+        height: 6px;
+        background: rgba(200, 200, 200, 0.7);
+        border-radius: 50%;
+        pointer-events: none;
+        animation: smokeRise 1.4s ease-out forwards;
+      }
+      @keyframes smokeRise {
+        0% {
+          opacity: 0.8;
+          transform: translateY(0) scale(1);
+        }
+        100% {
+          opacity: 0;
+          transform: translateY(-60px) scale(3) rotate(30deg);
+        }
+      }
+
+      /* SCENE 5 – FINAL */
+      #s5 {
+        background: radial-gradient(
+          ellipse at 50% 50%,
+          #1a0e00 0%,
+          #0c0b1a 65%
+        );
+      }
+
+      .final-ring {
+        position: absolute;
+        width: 500px;
+        height: 500px;
+        border: 1px solid rgba(245, 200, 66, 0.08);
+        border-radius: 50%;
+        animation: spin 30s linear infinite;
+      }
+      .final-ring::before,
+      .final-ring::after {
+        content: "✦";
+        position: absolute;
+        color: rgba(245, 200, 66, 0.5);
+        font-size: 10px;
+      }
+      .final-ring::before {
+        top: -6px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+      .final-ring::after {
+        bottom: -6px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      .sig {
+        font-family: "Playfair Display", serif;
+        font-style: italic;
+        font-size: 1.4rem;
+        color: var(--gold);
+        margin-top: 32px;
+        opacity: 0.85;
+      }
+
+      /* CONFETTI CANVAS */
+      #confetti-canvas {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 50;
+      }
+
+      /* PARTICLE STARS */
+      #stars canvas {
+        width: 100%;
+        height: 100%;
+      }
+
+      /* TRANSITIONS - slide in from right */
+      .scene {
+        transform: translateX(30px);
+        transition:
+          opacity 0.9s,
+          transform 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .scene.active {
+        transform: translateX(0);
+      }
+      .scene.out {
+        transform: translateX(-30px);
+        opacity: 0;
+      }
+
+      /* SHIMMER text decoration */
+      .shimmer-line {
+        width: 60px;
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--gold),
+          transparent
+        );
+        margin: 20px auto 0;
+      }
+
+      /* STAGGER ANIMATIONS */
+      .stagger {
+        opacity: 0;
+        transform: translateY(18px);
+        transition:
+          opacity 0.7s,
+          transform 0.7s;
+      }
+      .scene.active .stagger {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .scene.active .stagger:nth-child(2) {
+        transition-delay: 0.15s;
+      }
+      .scene.active .stagger:nth-child(3) {
+        transition-delay: 0.3s;
+      }
+      .scene.active .stagger:nth-child(4) {
+        transition-delay: 0.45s;
+      }
+      .scene.active .stagger:nth-child(5) {
+        transition-delay: 0.6s;
       }
     </style>
   </head>
-
   <body>
-    <div class="slider" id="slider">
-      <div class="slide">
-        <h1>Hey Kritika 👋</h1>
-        <p>I made something for you…</p>
-        <button onclick="next()">Start</button>
+    <div id="cursor"></div>
+    <div id="cursor-trail"></div>
+
+    <canvas
+      id="stars"
+      style="position: fixed; inset: 0; z-index: 0; pointer-events: none"
+    ></canvas>
+    <canvas id="confetti-canvas"></canvas>
+
+    <div class="world">
+      <!-- SCENE 1: OPENING -->
+      <div class="scene active" id="s1">
+        <div class="big-num">✦</div>
+        <div class="s1-content">
+          <div class="eyebrow stagger">A moment just for you</div>
+          <h1 class="headline stagger">
+            Something<br /><em>beautiful</em><br />awaits.
+          </h1>
+          <div class="shimmer-line stagger"></div>
+          <button class="btn stagger" onclick="go(1)">Begin &nbsp;→</button>
+        </div>
       </div>
 
-      <div class="slide">
-        <h1>Sorry 😅</h1>
-        <p>Sorry for the late wish… but this one is special ✨</p>
-        <button onclick="next()">Next</button>
+      <!-- SCENE 2: SORRY -->
+      <div class="scene" id="s2">
+        <div class="orbit-ring"></div>
+        <div class="orbit-ring orbit-ring2"></div>
+        <div class="eyebrow stagger">A confession</div>
+        <h1
+          class="headline stagger"
+          style="font-size: clamp(2.5rem, 6vw, 4.5rem)"
+        >
+          Late? Yes.<br /><em>Heartfelt?</em><br />Absolutely.
+        </h1>
+        <p class="subtext stagger">
+          Some wishes take a little longer<br />because they're made with more
+          care.
+        </p>
+        <button class="btn stagger" onclick="go(2)">Continue &nbsp;→</button>
       </div>
 
-      <div class="slide">
-        <h1>For You 🎂</h1>
-        <p>Wishing you happiness, success, and endless smiles 💫</p>
-        <button onclick="next()">Next</button>
+      <!-- SCENE 3: WISH -->
+      <div class="scene" id="s3">
+        <div class="floating-words" id="fwords"></div>
+        <div class="eyebrow stagger">From the heart</div>
+        <h1
+          class="headline stagger"
+          style="font-size: clamp(2.2rem, 5.5vw, 4rem)"
+        >
+          Happiness.<br /><em>Growth.</em><br />Every dream.
+        </h1>
+        <p class="subtext stagger">
+          May this year bring you everything<br />you've quietly wished for —
+          and more.
+        </p>
+        <button class="btn stagger" onclick="go(3)">
+          Light the cake &nbsp;→
+        </button>
       </div>
 
-      <!-- 🎂 CAKE -->
-      <div class="slide">
-        <h1>Make a Wish 🎂</h1>
+      <!-- SCENE 4: CAKE -->
+      <div class="scene" id="s4">
+        <div class="eyebrow stagger">Make your wish</div>
+        <h1
+          class="headline stagger"
+          style="font-size: clamp(2rem, 5vw, 3.5rem)"
+        >
+          Close your<br />eyes & <em>wish</em>
+        </h1>
 
-        <div class="cake">
-          <div class="layer"></div>
-          <div class="icing"></div>
-
-          <div class="candle">
-            <div class="flame" id="flame"></div>
-            <div class="smoke" id="smoke">
-              <span></span><span></span><span></span>
+        <div class="cake-wrap stagger">
+          <!-- Candles -->
+          <div style="position: relative; width: 180px; margin: 0 auto">
+            <div class="candles" id="candles">
+              <div class="candle c1">
+                <div class="flame-wrap">
+                  <div class="glow"></div>
+                  <div class="flame" id="f1"></div>
+                </div>
+                <div class="c-wick"></div>
+                <div class="c-body"></div>
+              </div>
+              <div class="candle c2">
+                <div class="flame-wrap">
+                  <div class="glow"></div>
+                  <div class="flame" id="f2"></div>
+                </div>
+                <div class="c-wick"></div>
+                <div class="c-body"></div>
+              </div>
+              <div class="candle c3">
+                <div class="flame-wrap">
+                  <div class="glow"></div>
+                  <div class="flame" id="f3"></div>
+                </div>
+                <div class="c-wick"></div>
+                <div class="c-body"></div>
+              </div>
             </div>
+
+            <!-- Tiers -->
+            <div class="tier t3">
+              <div class="drip-layer">
+                <svg viewBox="0 0 100 28">
+                  <path
+                    d="M0,0 Q10,18 20,8 Q30,20 40,6 Q50,22 60,8 Q70,20 80,6 Q90,18 100,0 L100,0 L0,0 Z"
+                    fill="rgba(255,240,220,0.9)"
+                  />
+                </svg>
+              </div>
+            </div>
+            <div class="tier t2" style="margin-top: -2px">
+              <div class="drip-layer">
+                <svg viewBox="0 0 140 28">
+                  <path
+                    d="M0,0 Q14,20 28,8 Q42,22 56,6 Q70,22 84,8 Q98,20 112,6 Q126,18 140,0 L140,0 L0,0 Z"
+                    fill="rgba(255,230,200,0.85)"
+                  />
+                </svg>
+              </div>
+            </div>
+            <div class="tier t1" style="margin-top: -2px">
+              <div class="drip-layer">
+                <svg viewBox="0 0 180 28">
+                  <path
+                    d="M0,0 Q18,22 36,8 Q54,24 72,6 Q90,24 108,8 Q126,22 144,6 Q162,20 180,0 L180,0 L0,0 Z"
+                    fill="rgba(255,220,210,0.85)"
+                  />
+                </svg>
+              </div>
+            </div>
+            <div class="plate" style="margin-top: 2px"></div>
           </div>
         </div>
 
-        <button onclick="blow()">Blow Candle 🕯️</button>
-        <button onclick="next()">Next</button>
+        <div class="stagger" style="display: flex; gap: 12px">
+          <button class="btn" onclick="blow()" id="blowbtn">Blow out ✦</button>
+          <button
+            class="btn"
+            onclick="go(4)"
+            id="nextbtn"
+            style="opacity: 0.3; pointer-events: none"
+          >
+            Next &nbsp;→
+          </button>
+        </div>
       </div>
 
-      <div class="slide">
-        <h1>🎉 Happy Birthday Kritika 🎂</h1>
-        <p class="final">
-          You deserve happiness, success, and unforgettable moments ✨<br /><br />
-          Keep shining, keep smiling — the best is yet to come 💫
+      <!-- SCENE 5: FINAL -->
+      <div class="scene" id="s5">
+        <div class="final-ring"></div>
+        <div class="eyebrow stagger">Always & forever</div>
+        <h1
+          class="headline stagger"
+          style="font-size: clamp(2.5rem, 7vw, 5rem)"
+        >
+          Happy<br /><em>Birthday</em> 🎂
+        </h1>
+        <p
+          class="subtext stagger"
+          style="
+            color: rgba(255, 255, 255, 0.65);
+            font-size: 1rem;
+            max-width: 340px;
+          "
+        >
+          You are rare. You are radiant.<br />The world is genuinely better with
+          you in it.<br /><br />
+          Here's to you — every single chapter ahead.
         </p>
-        <button onclick="restart()">Replay</button>
+        <div class="sig stagger">— with love ✦</div>
+        <button class="btn stagger" onclick="go(0)" style="margin-top: 36px">
+          Replay &nbsp;↺
+        </button>
       </div>
     </div>
 
     <!-- DOTS -->
-    <div class="dots">
-      <div class="dot active"></div>
+    <div id="dots">
+      <div class="dot on"></div>
       <div class="dot"></div>
       <div class="dot"></div>
       <div class="dot"></div>
@@ -264,35 +842,172 @@
     </div>
 
     <script>
-      let i = 0;
-      const slider = document.getElementById("slider");
+      /* ── CURSOR ── */
+      const cur = document.getElementById("cursor");
+      const trail = document.getElementById("cursor-trail");
+      document.addEventListener("mousemove", (e) => {
+        cur.style.left = e.clientX + "px";
+        cur.style.top = e.clientY + "px";
+        trail.style.left = e.clientX + "px";
+        trail.style.top = e.clientY + "px";
+      });
+
+      /* ── STARS ── */
+      (function () {
+        const c = document.getElementById("stars");
+        const ctx = c.getContext("2d");
+        c.width = window.innerWidth;
+        c.height = window.innerHeight;
+        const stars = Array.from({ length: 180 }, () => ({
+          x: Math.random() * c.width,
+          y: Math.random() * c.height,
+          r: Math.random() * 1.2 + 0.2,
+          a: Math.random(),
+          da: (Math.random() - 0.5) * 0.008,
+        }));
+        function draw() {
+          ctx.clearRect(0, 0, c.width, c.height);
+          stars.forEach((s) => {
+            s.a = Math.max(0.05, Math.min(1, s.a + s.da));
+            if (s.a <= 0.05 || s.a >= 1) s.da *= -1;
+            ctx.beginPath();
+            ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(255,255,235,${s.a})`;
+            ctx.fill();
+          });
+          requestAnimationFrame(draw);
+        }
+        draw();
+      })();
+
+      /* ── FLOATING WORDS (scene 3) ── */
+      const words = [
+        "joy",
+        "love",
+        "laughter",
+        "dreams",
+        "magic",
+        "wonder",
+        "light",
+        "hope",
+        "growth",
+        "peace",
+        "celebrate",
+      ];
+      const fw = document.getElementById("fwords");
+      words.forEach((w, i) => {
+        const el = document.createElement("div");
+        el.className = "fw";
+        el.textContent = w;
+        el.style.left = 5 + Math.random() * 85 + "%";
+        el.style.fontSize = 1 + Math.random() * 2.5 + "rem";
+        el.style.animationDuration = 14 + Math.random() * 18 + "s";
+        el.style.animationDelay = Math.random() * 16 + "s";
+        fw.appendChild(el);
+      });
+
+      /* ── SLIDES ── */
+      let current = 0;
+      const scenes = document.querySelectorAll(".scene");
       const dots = document.querySelectorAll(".dot");
 
-      function update() {
-        slider.style.transform = `translateX(-${i * 100}vw)`;
-        dots.forEach((d) => d.classList.remove("active"));
-        dots[i].classList.add("active");
+      function go(n) {
+        scenes[current].classList.remove("active");
+        scenes[current].classList.add("out");
+        setTimeout(
+          () => scenes[current < n ? current : current].classList.remove("out"),
+          900,
+        );
+        current = n;
+        scenes[current].classList.add("active");
+        dots.forEach((d, i) => (d.className = "dot" + (i === n ? " on" : "")));
+        if (n === 4) fireConfetti();
       }
 
-      function next() {
-        if (i < 4) {
-          i++;
-          update();
-        }
-      }
-
-      function restart() {
-        i = 0;
-        update();
-      }
-
-      /* 🎂 Blow */
+      /* ── BLOW CANDLE ── */
       function blow() {
-        document.getElementById("flame").style.display = "none";
-        document.querySelectorAll("#smoke span").forEach((s, idx) => {
-          s.style.animation = `smoke 1s ease ${idx * 0.2}s forwards`;
+        ["f1", "f2", "f3"].forEach((id, i) => {
+          setTimeout(() => {
+            const flame = document.getElementById(id);
+            const glow = flame.parentElement.querySelector(".glow");
+            // puff smoke
+            for (let s = 0; s < 5; s++) {
+              const sp = document.createElement("div");
+              sp.className = "smoke-particle";
+              sp.style.left = Math.random() * 16 - 8 + "px";
+              sp.style.animationDelay = s * 0.1 + "s";
+              flame.parentElement.appendChild(sp);
+              setTimeout(() => sp.remove(), 1500);
+            }
+            flame.style.display = "none";
+            if (glow) glow.style.display = "none";
+          }, i * 180);
         });
+        document.getElementById("blowbtn").style.opacity = "0.3";
+        document.getElementById("blowbtn").style.pointerEvents = "none";
+        setTimeout(() => {
+          const nb = document.getElementById("nextbtn");
+          nb.style.opacity = "1";
+          nb.style.pointerEvents = "auto";
+        }, 800);
       }
+
+      /* ── CONFETTI ── */
+      function fireConfetti() {
+        const cv = document.getElementById("confetti-canvas");
+        cv.width = window.innerWidth;
+        cv.height = window.innerHeight;
+        const ctx = cv.getContext("2d");
+        const colors = [
+          "#f5c842",
+          "#ff6b9d",
+          "#a855f7",
+          "#34d399",
+          "#60a5fa",
+          "#fda085",
+          "#fff",
+        ];
+        const pieces = Array.from({ length: 120 }, () => ({
+          x: Math.random() * cv.width,
+          y: Math.random() * cv.height - cv.height,
+          w: 6 + Math.random() * 8,
+          h: 4 + Math.random() * 6,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          rot: Math.random() * 360,
+          vx: (Math.random() - 0.5) * 4,
+          vy: 2 + Math.random() * 4,
+          vr: (Math.random() - 0.5) * 6,
+          op: 1,
+        }));
+        let frame;
+        function draw() {
+          ctx.clearRect(0, 0, cv.width, cv.height);
+          let alive = false;
+          pieces.forEach((p) => {
+            p.x += p.vx;
+            p.y += p.vy;
+            p.rot += p.vr;
+            if (p.y > cv.height * 0.75) p.op -= 0.015;
+            if (p.op > 0) alive = true;
+            ctx.save();
+            ctx.globalAlpha = Math.max(0, p.op);
+            ctx.translate(p.x, p.y);
+            ctx.rotate((p.rot * Math.PI) / 180);
+            ctx.fillStyle = p.color;
+            ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+            ctx.restore();
+          });
+          if (alive) frame = requestAnimationFrame(draw);
+          else ctx.clearRect(0, 0, cv.width, cv.height);
+        }
+        draw();
+      }
+
+      /* ── KEYBOARD NAV ── */
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowRight" && current < 4) go(current + 1);
+        if (e.key === "ArrowLeft" && current > 0) go(current - 1);
+      });
     </script>
   </body>
 </html>
