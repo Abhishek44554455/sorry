@@ -3,221 +3,295 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sorry Kritika 💖</title>
+    <title>Birthday Experience 🎉</title>
 
     <style>
-      body {
+      * {
         margin: 0;
+        padding: 0;
+        box-sizing: border-box;
         font-family: "Segoe UI", sans-serif;
+      }
+
+      body {
         overflow: hidden;
-        background: black;
+        background: #0f172a;
+      }
+
+      /* SLIDER */
+      .slider {
+        display: flex;
+        width: 500vw;
+        height: 100vh;
+        transition: transform 0.8s cubic-bezier(0.77, 0, 0.18, 1);
+      }
+
+      /* SLIDE */
+      .slide {
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 20px;
         color: white;
       }
 
-      /* Intro */
-      .intro {
+      /* GRADIENTS */
+      .slide:nth-child(1) {
+        background: linear-gradient(135deg, #4f46e5, #9333ea);
+      }
+      .slide:nth-child(2) {
+        background: linear-gradient(135deg, #ef4444, #fb7185);
+      }
+      .slide:nth-child(3) {
+        background: linear-gradient(135deg, #10b981, #34d399);
+      }
+      .slide:nth-child(4) {
+        background: linear-gradient(135deg, #9333ea, #6366f1);
+      }
+      .slide:nth-child(5) {
+        background: linear-gradient(135deg, #f59e0b, #fbbf24);
+      }
+
+      /* TEXT */
+      h1 {
+        font-size: 2.5rem;
+        margin-bottom: 15px;
+      }
+
+      p {
+        max-width: 500px;
+        line-height: 1.6;
+        opacity: 0.9;
+      }
+
+      /* BUTTON */
+      button {
+        margin-top: 25px;
+        padding: 12px 25px;
+        border: none;
+        border-radius: 30px;
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+        color: white;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+
+      button:hover {
+        transform: scale(1.1);
+        background: white;
+        color: #111;
+      }
+
+      /* DOT NAVIGATION */
+      .dots {
         position: fixed;
+        bottom: 20px;
         width: 100%;
-        height: 100%;
-        background: radial-gradient(circle, #000, #1a1a1a);
         display: flex;
         justify-content: center;
-        align-items: center;
-        flex-direction: column;
-        z-index: 10;
-        animation: fadeOut 2s ease forwards;
-        animation-delay: 3s;
+        gap: 10px;
       }
 
-      .intro h1 {
-        font-size: 8vw;
-        opacity: 0;
-        animation: zoomIn 2s forwards;
+      .dot {
+        width: 10px;
+        height: 10px;
+        background: rgba(255, 255, 255, 0.4);
+        border-radius: 50%;
+        transition: 0.3s;
       }
 
-      .intro p {
-        opacity: 0;
-        animation: fadeIn 2s forwards;
-        animation-delay: 1.5s;
+      .dot.active {
+        background: white;
+        transform: scale(1.5);
       }
 
-      @keyframes zoomIn {
-        from {
-          transform: scale(0.6);
-          opacity: 0;
-        }
-        to {
-          transform: scale(1);
-          opacity: 1;
-        }
+      /* 🎂 CAKE */
+      .cake {
+        position: relative;
+        margin-top: 30px;
       }
 
-      @keyframes fadeIn {
-        to {
-          opacity: 1;
-        }
-      }
-      @keyframes fadeOut {
-        to {
-          opacity: 0;
-          visibility: hidden;
-        }
+      .layer {
+        width: 150px;
+        height: 70px;
+        background: #ff6b81;
+        border-radius: 15px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
       }
 
-      /* Main */
-      .main {
+      .icing {
+        width: 150px;
+        height: 20px;
+        background: white;
         position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        text-align: center;
+        top: -10px;
+        border-radius: 10px;
       }
 
-      #text {
-        font-size: 8vw;
-        border-right: 3px solid white;
-        white-space: nowrap;
-        overflow: hidden;
+      /* CANDLE */
+      .candle {
+        width: 14px;
+        height: 40px;
+        position: absolute;
+        top: -50px;
+        left: 68px;
+        border-radius: 4px;
+        background: linear-gradient(#fff, #eee);
       }
 
-      .sub {
-        margin-top: 10px;
-        font-size: 4vw;
-        color: #ffb6c1;
+      .flame {
+        width: 14px;
+        height: 20px;
+        position: absolute;
+        top: -20px;
+        background: radial-gradient(circle, #fff, #ffcc00, orange);
+        border-radius: 50%;
+        animation: flicker 0.3s infinite;
+        box-shadow: 0 0 20px orange;
       }
 
-      .heart {
-        font-size: 12vw;
-        animation: beat 1s infinite;
-      }
-
-      @keyframes beat {
-        50% {
+      @keyframes flicker {
+        0% {
+          transform: scale(1);
+        }
+        100% {
           transform: scale(1.2);
         }
       }
 
-      /* Controls */
-      .controls {
-        position: fixed;
-        top: 10px;
-        right: 10px;
-        display: flex;
-        gap: 8px;
-      }
-
-      button {
-        padding: 8px 12px;
-        border-radius: 20px;
-        border: none;
-        cursor: pointer;
-      }
-
-      /* Floating hearts */
-      .float-heart {
+      /* SMOKE */
+      .smoke span {
         position: absolute;
-        bottom: 0;
-        font-size: 20px;
-        animation: rise 5s linear infinite;
+        width: 8px;
+        height: 8px;
+        background: gray;
+        border-radius: 50%;
+        opacity: 0;
       }
 
-      @keyframes rise {
-        to {
-          transform: translateY(-100vh);
+      @keyframes smoke {
+        0% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+        100% {
           opacity: 0;
+          transform: translateY(-40px) scale(2);
         }
       }
 
-      .tap {
-        position: absolute;
-        bottom: 30px;
-        width: 100%;
-        text-align: center;
-        font-size: 4vw;
-        opacity: 0.7;
+      /* FINAL TEXT */
+      .final {
+        animation: fadeUp 1.2s ease;
+      }
+
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
       }
     </style>
   </head>
 
   <body>
-    <div class="intro">
-      <h1>For Kritika 💖</h1>
-      <p>Something I should’ve said earlier...</p>
+    <div class="slider" id="slider">
+      <div class="slide">
+        <h1>Hey Kritika 👋</h1>
+        <p>I made something for you…</p>
+        <button onclick="next()">Start</button>
+      </div>
+
+      <div class="slide">
+        <h1>Sorry 😅</h1>
+        <p>Sorry for the late wish… but this one is special ✨</p>
+        <button onclick="next()">Next</button>
+      </div>
+
+      <div class="slide">
+        <h1>For You 🎂</h1>
+        <p>Wishing you happiness, success, and endless smiles 💫</p>
+        <button onclick="next()">Next</button>
+      </div>
+
+      <!-- 🎂 CAKE -->
+      <div class="slide">
+        <h1>Make a Wish 🎂</h1>
+
+        <div class="cake">
+          <div class="layer"></div>
+          <div class="icing"></div>
+
+          <div class="candle">
+            <div class="flame" id="flame"></div>
+            <div class="smoke" id="smoke">
+              <span></span><span></span><span></span>
+            </div>
+          </div>
+        </div>
+
+        <button onclick="blow()">Blow Candle 🕯️</button>
+        <button onclick="next()">Next</button>
+      </div>
+
+      <div class="slide">
+        <h1>🎉 Happy Birthday Kritika 🎂</h1>
+        <p class="final">
+          You deserve happiness, success, and unforgettable moments ✨<br /><br />
+          Keep shining, keep smiling — the best is yet to come 💫
+        </p>
+        <button onclick="restart()">Replay</button>
+      </div>
     </div>
 
-    <div class="controls">
-      <button onclick="toggleSound()">🔊</button>
-      <button onclick="changeTrack()">🎵</button>
+    <!-- DOTS -->
+    <div class="dots">
+      <div class="dot active"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
     </div>
-
-    <div class="main">
-      <div id="text"></div>
-      <div class="sub">I’m late… but I truly mean it 💫</div>
-      <div class="heart">💖</div>
-    </div>
-
-    <div class="tap">Tap anywhere to start</div>
-
-    <audio id="music" loop></audio>
 
     <script>
-      let started = false;
       let i = 0;
-      const message = "Sorry Kritika 💔";
+      const slider = document.getElementById("slider");
+      const dots = document.querySelectorAll(".dot");
 
-      /* Royalty-free tracks */
-      const tracks = [
-        "https://cdn.pixabay.com/audio/2022/03/15/audio_115b9b6c77.mp3",
-        "https://cdn.pixabay.com/audio/2022/10/25/audio_946f54c8b1.mp3",
-        "https://cdn.pixabay.com/audio/2022/02/23/audio_c8c8a73467.mp3",
-      ];
+      function update() {
+        slider.style.transform = `translateX(-${i * 100}vw)`;
+        dots.forEach((d) => d.classList.remove("active"));
+        dots[i].classList.add("active");
+      }
 
-      let currentTrack = 0;
-      const music = document.getElementById("music");
-      music.src = tracks[currentTrack];
-
-      /* Start on tap */
-      document.body.addEventListener("click", () => {
-        if (!started) {
-          music.play();
-          typeText();
-          started = true;
-        }
-      });
-
-      /* Typing */
-      function typeText() {
-        const el = document.getElementById("text");
-        if (i < message.length) {
-          el.innerHTML += message.charAt(i);
+      function next() {
+        if (i < 4) {
           i++;
-          setTimeout(typeText, 120);
+          update();
         }
       }
 
-      /* Hearts */
-      setInterval(() => {
-        let h = document.createElement("div");
-        h.className = "float-heart";
-        h.innerHTML = "💖";
-        h.style.left = Math.random() * 100 + "vw";
-        document.body.appendChild(h);
-        setTimeout(() => h.remove(), 5000);
-      }, 400);
-
-      /* Sound toggle */
-      let playing = true;
-      function toggleSound() {
-        if (playing) music.pause();
-        else music.play();
-        playing = !playing;
+      function restart() {
+        i = 0;
+        update();
       }
 
-      /* Change track */
-      function changeTrack() {
-        currentTrack = (currentTrack + 1) % tracks.length;
-        music.src = tracks[currentTrack];
-        music.play();
+      /* 🎂 Blow */
+      function blow() {
+        document.getElementById("flame").style.display = "none";
+        document.querySelectorAll("#smoke span").forEach((s, idx) => {
+          s.style.animation = `smoke 1s ease ${idx * 0.2}s forwards`;
+        });
       }
     </script>
   </body>
